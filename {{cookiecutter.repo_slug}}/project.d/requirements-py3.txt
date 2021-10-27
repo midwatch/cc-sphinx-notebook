@@ -1,0 +1,5 @@
+invoke
+pip
+poetry
+Sphinx
+sphinx-notebook
