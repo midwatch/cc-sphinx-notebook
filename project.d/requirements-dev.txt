@@ -1,0 +1,5 @@
+build-essential
+git
+git-flow
+python3-pip
+tig
