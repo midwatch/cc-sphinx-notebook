@@ -72,9 +72,13 @@ def clean(ctx):
 @task(clean)
 def build(ctx):
     """
-    Build source and wheel packages
+    Build html pages.
     """
-    pass
+    ctx.run('mkdir build')
+    ctx.run('cp -r notebook build/rst')
+    ctx.run('/usr/local/bin/sphinx_notebook notebook/ build/rst/index.rst')
+    ctx.run('sphinx-build -b html build/rst build/www')
+
 
 @task
 def init(ctx):
