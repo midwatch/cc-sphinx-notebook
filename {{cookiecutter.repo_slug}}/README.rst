@@ -1,5 +1,5 @@
 
-{{ cookiecutter.solution_short_description }}
+{{ cookiecutter.notebook_name }}
 
 * Free software: MIT License
 

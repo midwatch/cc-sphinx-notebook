@@ -5,15 +5,10 @@ from invoke import task
 from invoke.exceptions import Failure
 
 GITHUB_USERNAME = "{{ cookiecutter.github_username }}"
-GITHUB_SLUG = "{{ cookiecutter.github_slug }}"
-SOLUTION_SLUG = "{{ cookiecutter.solution_slug }}"
+GITHUB_SLUG = "{{ cookiecutter.repo_slug }}"
 CC_VERSION = "{{ cookiecutter.version }}"
 
 ROOT_DIR = Path(__file__).parent
-SOURCE_DIR = ROOT_DIR.joinpath("{{ cookiecutter.solution_slug }}")
-TEST_DIR = ROOT_DIR.joinpath("tests")
-
-PYTHON_DIRS_STR = " ".join([str(_dir) for _dir in [SOURCE_DIR, TEST_DIR]])
 
 
 @task

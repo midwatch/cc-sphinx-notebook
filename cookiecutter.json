@@ -3,5 +3,6 @@
   , "email": "midwatch@example.com"
   , "github_username": "nosuchuser"
   , "notebook_name": "My New Notebook"
-  , "github_slug": "{{ cookiecutter.notebook_name.lower().replace(' ', '-').replace('_', '-') }}"
+  , "repo_slug": "{{ cookiecutter.notebook_name.lower().replace(' ', '-').replace('_', '-') }}"
+  , "version": "0.0.0"
 }
