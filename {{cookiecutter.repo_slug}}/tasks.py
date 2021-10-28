@@ -8,6 +8,13 @@ GITHUB_USERNAME = "{{ cookiecutter.github_username }}"
 GITHUB_SLUG = "{{ cookiecutter.repo_slug }}"
 CC_VERSION = "{{ cookiecutter.version }}"
 
+RSYNC_HOST = "host"
+RSYNC_USER = "user"
+RSYNC_PATH_LOCAL = "build/www/"
+RSYNC_PATH_REMOTE = "remote path"
+
+TEMPLATE_ROOT = "project.d/templates"
+
 ROOT_DIR = Path(__file__).parent
 
 
@@ -76,7 +83,7 @@ def build(ctx):
     """
     ctx.run('mkdir build')
     ctx.run('cp -r notebook build/rst')
-    ctx.run('/usr/local/bin/sphinx_notebook notebook/ build/rst/index.rst')
+    ctx.run(f'sphinx_notebook build --template-dir {TEMPLATE_ROOT} notebook/ build/rst/index.rst')
     ctx.run('sphinx-build -b html build/rst build/www')
 
 
@@ -96,7 +103,7 @@ def release(ctx):
     """
     Make a release of the python package to pypi
     """
-    pass
+    # ctx.run(f'rsync -r --delete {RSYNC_PATH_LOCAL} {RSYNC_USER}@{RSYNC_HOST}:{RSYNC_PATH_REMOTE}')
 
 scm = Collection()
 scm.add_task(scm_push, name="push")
