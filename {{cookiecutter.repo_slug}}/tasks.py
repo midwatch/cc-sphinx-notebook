@@ -9,7 +9,7 @@ from mw_dry_invoke import git
 
 GITHUB_USERNAME = "{{ cookiecutter.github_username }}"
 GITHUB_SLUG = "{{ cookiecutter.repo_slug }}"
-CC_VERSION = "0.3.0"
+CC_VERSION = "0.4.0"
 
 RSYNC_HOST = "host"
 RSYNC_USER = "user"
