@@ -1,2 +1,4 @@
+bump2version
 invoke
+mw_dry_invoke
 pip
