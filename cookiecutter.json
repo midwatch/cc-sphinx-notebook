@@ -5,6 +5,7 @@
   , "notebook_name": "My New Notebook"
   , "repo_slug": "{{ cookiecutter.notebook_name.lower().replace(' ', '-').replace('_', '-') }}"
   , "version": "0.0.0"
+  , "index_template": ["index", "index_table"]
   , "_copy_without_render": [
       "project.d/templates"
   ]

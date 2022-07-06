@@ -9,14 +9,14 @@ from mw_dry_invoke import git
 
 GITHUB_USERNAME = "{{ cookiecutter.github_username }}"
 GITHUB_SLUG = "{{ cookiecutter.repo_slug }}"
-CC_VERSION = "0.4.0"
+CC_VERSION = "0.5.0"
 
 RSYNC_HOST = "host"
 RSYNC_USER = "user"
 RSYNC_PATH_LOCAL = "build/www/"
 RSYNC_PATH_REMOTE = "remote path"
 
-TEMPLATE_ROOT = "project.d/templates"
+TEMPLATE_NAME = "{{ cookiecutter.index_template }}.rst.jinja"
 
 ROOT_DIR = Path(__file__).parent
 
@@ -42,9 +42,15 @@ def build(ctx):
     """
     Build html pages.
     """
+    options = ' '.join((
+        f'--template-name {TEMPLATE_NAME}',
+        'notebook/',
+        'build/rst/index.rst'
+        ))
+
     ctx.run('mkdir build')
     ctx.run('cp -r notebook build/rst')
-    ctx.run(f'sphinx_notebook build --template-dir {TEMPLATE_ROOT} notebook/ build/rst/index.rst')
+    ctx.run(f'sphinx_notebook build {options}')
     ctx.run('sphinx-build -b html build/rst build/www')
 
 
