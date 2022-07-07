@@ -56,9 +56,8 @@ def build(ctx):
 
 @task
 def init_repo(ctx):
-    """Initialize freshly cloned repo."""
-    ctx.run('poetry install')
-    git.init(ctx)
+    """Initialize freshly cloned repo"""
+    git.init(ctx, GITHUB_USERNAME, GITHUB_SLUG, CC_VERSION)
 
 
 @task(pre=[clean, build])
