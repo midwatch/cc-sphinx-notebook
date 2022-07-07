@@ -9,7 +9,7 @@ from mw_dry_invoke import git
 
 GITHUB_USERNAME = "{{ cookiecutter.github_username }}"
 GITHUB_SLUG = "{{ cookiecutter.repo_slug }}"
-CC_VERSION = "0.5.0"
+CC_VERSION = "0.5.1"
 
 RSYNC_HOST = "host"
 RSYNC_USER = "user"
@@ -56,9 +56,8 @@ def build(ctx):
 
 @task
 def init_repo(ctx):
-    """Initialize freshly cloned repo."""
-    ctx.run('poetry install')
-    git.init(ctx)
+    """Initialize freshly cloned repo"""
+    git.init(ctx, GITHUB_USERNAME, GITHUB_SLUG, CC_VERSION)
 
 
 @task(pre=[clean, build])
