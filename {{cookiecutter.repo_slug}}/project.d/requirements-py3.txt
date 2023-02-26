@@ -4,3 +4,4 @@ mw_dry_invoke
 pip
 Sphinx
 sphinx-notebook
+python-dotenv

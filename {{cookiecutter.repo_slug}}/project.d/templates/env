@@ -1,3 +1,5 @@
+GITHUB_USERNAME={{ cookiecutter.github_username }}
+GITHUB_SLUG={{ cookiecutter.repo_slug }}
 RELEASE_PATH_LOCAL=build/www/
 RELEASE_DEVELOP_HOST=host
 RELEASE_DEVELOP_DOMAIN=example.com

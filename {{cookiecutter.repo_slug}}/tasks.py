@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from dotenv import dotenv_values
+
 from invoke import Collection
 from invoke import task
 from invoke.exceptions import Failure
@@ -7,14 +9,11 @@ from invoke.exceptions import Failure
 from mw_dry_invoke import bumpversion
 from mw_dry_invoke import git
 
-GITHUB_USERNAME = "{{ cookiecutter.github_username }}"
-GITHUB_SLUG = "{{ cookiecutter.repo_slug }}"
-CC_VERSION = "0.5.1"
+config = dotenv_values(".env")
 
-RSYNC_HOST = "host"
-RSYNC_USER = "user"
-RSYNC_PATH_LOCAL = "build/www/"
-RSYNC_PATH_REMOTE = "remote path"
+with Path("project.d/version_cc").open() as fd_in:
+    config['VERSION_CC'] = fd_in.read().strip()
+
 
 TEMPLATE_NAME = "{{ cookiecutter.index_template }}.rst.jinja"
 
@@ -57,16 +56,30 @@ def build(ctx):
 @task
 def init_repo(ctx):
     """Initialize freshly cloned repo"""
-    git.init(ctx, GITHUB_USERNAME, GITHUB_SLUG, CC_VERSION)
+    git.init(ctx, config['GITHUB_USERNAME'], config['GITHUB_SLUG'],
+             config['VERSION_CC'])
 
 
-@task(pre=[clean, build])
-def release(ctx):
+@task(help={'target': 'develop or main'}, pre=[clean, build])
+def release(ctx, target):
     """
-    Make a release of the python package to pypi
+    Build notebook and release to target
     """
-    # ctx.run(f'rsync -r --delete {RSYNC_PATH_LOCAL} {RSYNC_USER}@{RSYNC_HOST}:{RSYNC_PATH_REMOTE}')
+    PATH_LOCAL = config['RELEASE_PATH_LOCAL']
 
+    if target == 'main':
+        DOMAIN = config['RELEASE_MAIN_DOMAIN']
+        HOST = config['RELEASE_MAIN_HOST']
+        PATH_REMOTE = config['RELEASE_MAIN_PATH']
+        USER = config['RELEASE_MAIN_USER']
+
+    else:
+        DOMAIN = config['RELEASE_DEVELOP_DOMAIN']
+        HOST = config['RELEASE_DEVELOP_HOST']
+        PATH_REMOTE = config['RELEASE_DEVELOP_PATH']
+        USER = config['RELEASE_DEVELOP_USER']
+
+    ctx.run(f'rsync -r --delete {PATH_LOCAL} {USER}@{HOST}.{DOMAIN}:{PATH_REMOTE}')
 
 ns = Collection(bumpversion, build, clean, init_repo, release)
 ns.add_collection(git.collection, name="scm")
