@@ -68,5 +68,5 @@ def release(ctx):
     # ctx.run(f'rsync -r --delete {RSYNC_PATH_LOCAL} {RSYNC_USER}@{RSYNC_HOST}:{RSYNC_PATH_REMOTE}')
 
 
-ns = Collection(build, clean, init_repo, release)
+ns = Collection(bumpversion, build, clean, init_repo, release)
 ns.add_collection(git.collection, name="scm")
