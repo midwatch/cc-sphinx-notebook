@@ -14,12 +14,6 @@ config = dotenv_values(".env")
 with Path("project.d/version_cc").open() as fd_in:
     config['VERSION_CC'] = fd_in.read().strip()
 
-
-TEMPLATE_NAME = "{{ cookiecutter.index_template }}.rst.jinja"
-
-ROOT_DIR = Path(__file__).parent
-
-
 @task
 def clean_build(ctx):
     """
@@ -41,15 +35,9 @@ def build(ctx):
     """
     Build html pages.
     """
-    options = ' '.join((
-        f'--template-name {TEMPLATE_NAME}',
-        'notebook/',
-        'build/rst/index.rst'
-        ))
-
     ctx.run('mkdir build')
     ctx.run('cp -r notebook build/rst')
-    ctx.run(f'sphinx_notebook build {options}')
+    ctx.run(f'sphinx_notebook build notebook/ build/rst/index.rst')
     ctx.run('sphinx-build -b html build/rst build/www')
 
 
