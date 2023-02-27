@@ -48,8 +48,8 @@ def init_repo(ctx):
              config['VERSION_CC'])
 
 
-@task(help={'target': 'develop or main'}, pre=[clean, build])
-def release(ctx, target):
+@task(help={'target': 'develop (default) or main'}, pre=[clean, build])
+def release(ctx, target=develop):
     """
     Build notebook and release to target
     """
