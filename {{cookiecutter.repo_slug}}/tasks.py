@@ -11,9 +11,6 @@ from mw_dry_invoke import git
 
 config = dotenv_values(".env")
 
-with Path("project.d/version_cc").open() as fd_in:
-    config['VERSION_CC'] = fd_in.read().strip()
-
 @task
 def clean_build(ctx):
     """
@@ -44,8 +41,12 @@ def build(ctx):
 @task
 def init_repo(ctx):
     """Initialize freshly cloned repo"""
-    git.init(ctx, config['GITHUB_USERNAME'], config['GITHUB_SLUG'],
-             config['VERSION_CC'])
+    with Path("project.d/version_cc").open() as fd_in:
+        version = fd_in.read().strip()
+        commit_msg = f'new package from midwatch/cc-sphinx-notebook ({version})'
+
+        git.init(ctx, config['GITHUB_USERNAME'], config['GITHUB_SLUG'],
+                 commit_msg)
 
 
 @task(help={'target': 'develop (default) or main'}, pre=[clean, build])
