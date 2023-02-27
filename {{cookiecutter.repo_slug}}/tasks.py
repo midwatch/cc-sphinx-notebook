@@ -49,7 +49,7 @@ def init_repo(ctx):
 
 
 @task(help={'target': 'develop (default) or main'}, pre=[clean, build])
-def release(ctx, target=develop):
+def release(ctx, target='develop'):
     """
     Build notebook and release to target
     """

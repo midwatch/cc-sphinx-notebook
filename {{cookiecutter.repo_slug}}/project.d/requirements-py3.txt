@@ -2,6 +2,6 @@ bump2version
 invoke
 mw_dry_invoke
 pip
-Sphinx
-sphinx-notebook
+pipx
 python-dotenv
+Sphinx
