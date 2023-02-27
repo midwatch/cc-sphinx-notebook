@@ -1,3 +1,3 @@
 ---
 title: "{{ cookiecutter.notebook_name }}"
-header: ""
+header: "{{ cookiecutter.notebook_name }}"

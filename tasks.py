@@ -16,6 +16,7 @@ def init_repo(ctx):
     """Initialize freshly cloned repo"""
     git.init(ctx, GITHUB_USERNAME, GITHUB_SLUG, CC_VERSION)
 
-
 ns = Collection(bumpversion, init_repo)
+ns.add_task(init_repo, name='init')
+
 ns.add_collection(git.collection, name="scm")

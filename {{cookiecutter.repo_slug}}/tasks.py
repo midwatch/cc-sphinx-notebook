@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from dotenv import dotenv_values
+
 from invoke import Collection
 from invoke import task
 from invoke.exceptions import Failure
@@ -7,19 +9,7 @@ from invoke.exceptions import Failure
 from mw_dry_invoke import bumpversion
 from mw_dry_invoke import git
 
-GITHUB_USERNAME = "{{ cookiecutter.github_username }}"
-GITHUB_SLUG = "{{ cookiecutter.repo_slug }}"
-CC_VERSION = "0.5.1"
-
-RSYNC_HOST = "host"
-RSYNC_USER = "user"
-RSYNC_PATH_LOCAL = "build/www/"
-RSYNC_PATH_REMOTE = "remote path"
-
-TEMPLATE_NAME = "{{ cookiecutter.index_template }}.rst.jinja"
-
-ROOT_DIR = Path(__file__).parent
-
+config = dotenv_values(".env")
 
 @task
 def clean_build(ctx):
@@ -42,31 +32,45 @@ def build(ctx):
     """
     Build html pages.
     """
-    options = ' '.join((
-        f'--template-name {TEMPLATE_NAME}',
-        'notebook/',
-        'build/rst/index.rst'
-        ))
-
     ctx.run('mkdir build')
     ctx.run('cp -r notebook build/rst')
-    ctx.run(f'sphinx_notebook build {options}')
+    ctx.run(f'sphinx_notebook build notebook/ build/rst/index.rst')
     ctx.run('sphinx-build -b html build/rst build/www')
 
 
 @task
 def init_repo(ctx):
     """Initialize freshly cloned repo"""
-    git.init(ctx, GITHUB_USERNAME, GITHUB_SLUG, CC_VERSION)
+    with Path("project.d/version_cc").open() as fd_in:
+        version = fd_in.read().strip()
+        commit_msg = f'new package from midwatch/cc-sphinx-notebook ({version})'
+
+        git.init(ctx, config['GITHUB_USERNAME'], config['GITHUB_SLUG'],
+                 commit_msg)
 
 
-@task(pre=[clean, build])
-def release(ctx):
+@task(help={'target': 'develop (default) or main'}, pre=[clean, build])
+def release(ctx, target='develop'):
     """
-    Make a release of the python package to pypi
+    Build notebook and release to target
     """
-    # ctx.run(f'rsync -r --delete {RSYNC_PATH_LOCAL} {RSYNC_USER}@{RSYNC_HOST}:{RSYNC_PATH_REMOTE}')
+    PATH_LOCAL = config['RELEASE_PATH_LOCAL']
 
+    if target == 'main':
+        DOMAIN = config['RELEASE_MAIN_DOMAIN']
+        HOST = config['RELEASE_MAIN_HOST']
+        PATH_REMOTE = config['RELEASE_MAIN_PATH']
+        USER = config['RELEASE_MAIN_USER']
 
-ns = Collection(build, clean, init_repo, release)
+    else:
+        DOMAIN = config['RELEASE_DEVELOP_DOMAIN']
+        HOST = config['RELEASE_DEVELOP_HOST']
+        PATH_REMOTE = config['RELEASE_DEVELOP_PATH']
+        USER = config['RELEASE_DEVELOP_USER']
+
+    ctx.run(f'rsync -r --delete {PATH_LOCAL} {USER}@{HOST}.{DOMAIN}:{PATH_REMOTE}')
+
+ns = Collection(bumpversion, build, clean, release)
+ns.add_task(init_repo, name='init')
+
 ns.add_collection(git.collection, name="scm")

@@ -1,0 +1,11 @@
+GITHUB_USERNAME={{ cookiecutter.github_username }}
+GITHUB_SLUG={{ cookiecutter.repo_slug }}
+RELEASE_PATH_LOCAL=build/www/
+RELEASE_DEVELOP_HOST=host
+RELEASE_DEVELOP_DOMAIN=example.com
+RELEASE_DEVELOP_USER=user
+RELEASE_DEVELOP_PATH=/path/to/folder
+RELEASE_MAIN_HOST=host
+RELEASE_MAIN_DOMAIN=example.com
+RELEASE_MAIN_USER=user
+RELEASE_MAIN_PATH=/path/to/remote/folder
