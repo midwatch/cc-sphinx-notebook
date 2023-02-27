@@ -69,7 +69,7 @@ def release(ctx, target='develop'):
 
     ctx.run(f'rsync -r --delete {PATH_LOCAL} {USER}@{HOST}.{DOMAIN}:{PATH_REMOTE}')
 
-ns = Collection(bumpversion, build, clean, init_repo, release)
+ns = Collection(bumpversion, build, clean, release)
 ns.add_task(init_repo, name='init')
 
 ns.add_collection(git.collection, name="scm")
